@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Oksana Palladii](https://up.htmlacademy.ru/javascript/21/user/476339).
-* Наставник: `Неизвестно`.
+* Наставник: Евгений Фаллер (https://htmlacademy.ru/profile/id505933).
 
 ---
 
