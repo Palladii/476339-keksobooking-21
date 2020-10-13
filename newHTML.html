@@ -1,0 +1,151 @@
+<html>
+<body class="body">
+<div class="mydiv">
+  my old div
+</div>
+<template id="mytemplate">
+  <article>
+    <h1>Title</h1>
+    <p>Text article</p>
+  </article>
+</template>
+<script>
+  const titles = ['title1', 'title2']
+  const texts = ['text1', 'text2']
+
+
+  var myBody = document.querySelector('.mydiv');
+  var template = document.querySelector('#mytemplate').content;
+  var element = template.querySelector('article');
+  var clonedElement = element.cloneNode(true);
+  myBody.appendChild(clonedElement);
+  var cloned1Element = element.cloneNode(true);
+  myBody.appendChild(cloned1Element);
+
+  var changeArticle1 = document.querySelector('.mydiv article:nth-child(1)');
+  var changeArticle2 = document.querySelector('.mydiv article:nth-child(2)');
+  changeArticle1.innerText;
+  changeArticle2.innerText;
+  changeArticle1.innerText = 'New article';
+  changeArticle2.innerText = 'Super new article';
+
+
+
+  var createArticle = function(articleObj) {
+    var myBody = document.querySelector('.mydiv');
+    var template = document.querySelector('#mytemplate').content;
+    var element = template.querySelector('article');
+    var clonedElement = element.cloneNode(true);
+    /*myBody.appendChild(clonedElement);*/
+
+    var changeTitle1 = clonedElement.querySelector('h1');
+    changeTitle1.textContent;
+    changeTitle1.textContent = articleObj.title;
+    var changeArticle1 = clonedElement.querySelector('p');
+    changeArticle1.textContent;
+    changeArticle1.textContent = articleObj.text;
+    myBody.appendChild(clonedElement);
+  };
+
+  var getRandomElement = function (items) {
+    var item = items[Math.floor(Math.random() * items.length)];
+    return item;
+  };
+
+  var getRandomElement = function () {
+    var item = items[Math.floor(Math.random() * items.length)];
+    return item;
+  };
+
+  for (var j = 1; j <= 3; j++) {
+    var myTitle = titles;
+    var myText = texts;
+    createArticle(myTitle, myText)
+  }
+
+
+  for (var i = 0; i < createArticle.length; i++) {
+    var wizardElement = similarWizardTemplate.cloneNode(true);
+
+    similarListElement.appendChild(wizardElement);
+  }
+</script>
+</body>
+</html>
+
+
+
+
+
+<!--const TITLE = ['Хостел', 'Отель в центре', 'Комната', 'Квартира', 'Гостиница', 'Бунгало на крыше', 'Отель на окрайне', 'Хостел для компании'];
+const PRICE = [1000, 1500, 2000, 2500, 3500, 4000, 4100, 10000];
+const TYPE = ['palace', 'flat', 'house', 'bungalow'];
+const ROOMS = [1, 2, 3, 4, 5];
+const GUESTS = [1, 2, 3, 4];
+const CHECKIN_CHECKOUT = ['12:00', '13:00', '14:00'];
+const FEATURES = ["wifi", "dishwasher", "parking", "washer", "elevator", "conditioner"];
+const DESCRIPTION = ['Лучшее предложение', 'Лучшая цена', 'Высокая оценка гостей', 'Рядом с центром'];
+const PHOTOS_ROOMS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+
+
+const mapPins = document.querySelector('.map__pins');
+const pinTemplate = document.querySelector('#pin').content;
+const newElement = pinTemplate.querySelector('button');
+
+for (var i = 1; i <= 10; i++) {
+let cloneElement = newElement.cloneNode(true);
+cloneElement.children[0].textContent = i;
+mapPins.appendChild(cloneElement);
+}
+
+const getRandomInteger = function (min, max) {
+let rand = min + Math.random() * (max + 1 - min);
+return Math.floor(rand);
+};
+
+var getRandomElement = function (items) {
+var item = items[Math.floor(Math.random() * items.length)];
+return item;
+};
+
+const getNewCard = function () {
+return {
+author: {
+avatar: "img/avatars/user" + 0 + getRandomInteger(1, 8) + ".png",
+},
+offer: {
+title: getRandomElement(TITLE),
+address: '600 350',
+price: getRandomElement(PRICE),
+type: getRandomElement(TYPE),
+rooms: getRandomElement(ROOMS),
+guests: getRandomElement(GUESTS),
+checkin: getRandomElement(CHECKIN_CHECKOUT),
+checkout: getRandomElement(CHECKIN_CHECKOUT),
+features: getRandomElement(FEATURES),
+description: getRandomElement(DESCRIPTION),
+photos: getRandomElement(PHOTOS_ROOMS),
+},
+location: {
+x: getRandomInteger(20, 1180),
+y: getRandomInteger(130, 630),
+}
+};
+};
+
+var pool = document.querySelector('.pool');
+var template = document.querySelector('#card').content;
+var element = template.querySelector('article');
+/*for (var j = 1; j <= 10; j++) {*/
+
+var clonedElement = element.cloneNode(true);
+
+/*clonedElement.children[0].textContent = i;*/
+pool.appendChild(clonedElement);
+/*}*/
+
+/*
+var titleElement = document.querySelector('.popup__title');
+titleElement.innerText;
+titleElement.innerText = 'Я ПОМЕНЯЛА';
+*/-->

@@ -1,0 +1,22 @@
+{
+  "author": {
+    "avatar": "img/avatars/user01.png"
+  },
+  "offer": {
+    "title": "Квартира",
+    "address": "600, 350",
+    "price": 1000,
+    "type": "palace",
+    "rooms": 1,
+    "guests": 2,
+    "checkin": "12:00",
+    "checkout": "12:00",
+    "features": "wifi",
+    "description": "строка с описанием",
+    "photos": "http://o0.github.io/assets/images/tokyo/hotel1.jpg",
+    "location": {
+      "x": 200,
+      "y": 200
+    }
+  }
+}

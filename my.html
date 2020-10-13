@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <!-- ... -->
+</head>
+<body class="body">
+
+<script>
+  const dog = {name: 'Боб', sound: 'Гав'};
+  const cat = {name: 'Фея', sound: 'Мяу'};
+  const cow = {name: 'Мурка', sound: 'Му'};
+
+  const getSound = function (animal) {
+    let soundAnimal = animal.sound;
+    let name = animal.name;
+    console.log(name + ' говорит ' + soundAnimal);
+  }
+
+  const ANIMALS = [
+    dog, cat, cow
+  ]
+
+  const main = function () {
+    for (let i=0; i < ANIMALS.length; i++) {
+      getSound(ANIMALS[i]);
+    }
+  };
+  main();
+</script>
+</body>
+</html>
