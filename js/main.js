@@ -9,7 +9,12 @@ const CHECKIN_CHECKOUT = ['12:00', '13:00', '14:00'];
 const FEATURES = ["wifi", "dishwasher", "parking", "washer", "elevator", "conditioner"];
 const DESCRIPTION = ['Лучшее предложение', 'Лучшая цена', 'Высокая оценка гостей', 'Рядом с центром'];
 const PHOTOS_ROOMS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-
+const minMapX = 40;
+const maxMapX = 1160;
+const minMapY = 130;
+const maxMapY = 630;
+const minOffer = 1;
+const maxOffer = 8;
 
 const map = document.querySelector('.map');
 map.classList.remove('map--faded');
@@ -30,11 +35,11 @@ const getRandomElement = function (items) {
 const getNewCard = function () {
   return {
     author: {
-      avatar: "img/avatars/user0" + getRandomInteger(1, 8) + ".png",
+      avatar: "img/avatars/user0" + getRandomInteger(minOffer, maxOffer) + ".png",
     },
     offer: {
       title: getRandomElement(TITLE),
-      address: '600 350',
+      address: 'location.x, location.y',
       price: getRandomElement(PRICE),
       type: getRandomElement(TYPE),
       rooms: getRandomElement(ROOMS),
@@ -46,59 +51,25 @@ const getNewCard = function () {
       photos: getRandomElement(PHOTOS_ROOMS),
     },
     location: {
-      x: getRandomInteger(20, 1180),
-      y: getRandomInteger(130, 630),
+      x: getRandomInteger(minMapX, maxMapX),
+      y: getRandomInteger(minMapY, maxMapY),
     }
   };
 };
 
-var buttonObj = [
-  {
-    avatar: "img/avatars/user0" + getRandomInteger(1, 8) + ".png", x: getRandomInteger(20, 1180),
-    y: getRandomInteger(130, 630)
-  },
-  {
-    avatar: "img/avatars/user0" + getRandomInteger(1, 8) + ".png", x: getRandomInteger(20, 1180),
-    y: getRandomInteger(130, 630)
-  },
-  {
-    avatar: "img/avatars/user0" + getRandomInteger(1, 8) + ".png", x: getRandomInteger(20, 1180),
-    y: getRandomInteger(130, 630)
-  }
-];
 
-var renderButton = function (button) {
+var renderButton = function (cardData) {
   var buttonPin = buttonTemplate.cloneNode(true);
-
-  buttonPin.querySelector('.map.pin').style.left = buttonObj[i].x;
-  buttonPin.querySelector('.map.pin').style.top = buttonObj[i].y;
-  buttonPin.querySelector('button.img').src = buttonObj[i].avatar;
-
+  buttonPin.style.left = `${cardData.location.x}px`;
+  buttonPin.style.top = `${cardData.location.y}px`;
+  buttonPin.querySelector('img').src = cardData.author.avatar;
   return buttonPin;
 };
 
 var fragment = document.createDocumentFragment();
-for (var i = 0; i < buttonObj.length; i++) {
-  fragment.appendChild(renderButton(buttonObj[i]));
+for (var i = 0; i < maxOffer; i++) {
+  fragment.appendChild(renderButton(getNewCard()));
 }
+
 mapPins.appendChild(fragment);
 
-
-// var nombOffer = 8;
-
-//
-// var mapPins = document.querySelector('.map__pins');
-// var buttonTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-//
-//
-
-//
-//
-//
-//
-// for (var i = 0; i < nombOffer; i++) {
-//   var buttonElement = buttonTemplate.cloneNode(true);
-//
-//   mapPins.appendChild(buttonElement);
-// }
-//
