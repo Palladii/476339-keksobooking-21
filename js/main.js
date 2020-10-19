@@ -32,10 +32,10 @@ const getRandomElement = function (items) {
   return item;
 };
 
-const getNewCard = function () {
+const getNewCard = function (i) {
   return {
     author: {
-      avatar: `img/avatars/user` + 0 + getRandomInteger(minOffer, maxOffer) + `.png`,
+      avatar: `img/avatars/user0${i + 1}.png`
     },
     offer: {
       title: getRandomElement(TITLE),
@@ -68,7 +68,7 @@ const renderButton = function (cardData) {
 
 const fragment = document.createDocumentFragment();
 for (let i = 0; i < maxOffer; i++) {
-  fragment.appendChild(renderButton(getNewCard()));
+  fragment.appendChild(renderButton(getNewCard(i)));
 }
 
 mapPins.appendChild(fragment);
