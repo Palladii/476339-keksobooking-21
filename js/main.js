@@ -13,7 +13,6 @@ const minMapX = 40;
 const maxMapX = 1160;
 const minMapY = 130;
 const maxMapY = 630;
-const minOffer = 1;
 const maxOffer = 8;
 
 const map = document.querySelector(`.map`);
