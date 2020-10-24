@@ -120,19 +120,42 @@ const getCardType = function (cardDataType) {
   return cardType;
 };
 
+const updateCardData = function (cardAdvert, selector, value) {
+  const element = cardAdvert.querySelector(selector);
+  if (value) {
+    element.textContent = value;
+  } else {
+    element.remove();
+  }
+};
+
+const updateCardImg = function (cardAdvert, selector, value) {
+  const elementImg = cardAdvert.querySelector(selector);
+  if (value) {
+    elementImg.src = value;
+  } else {
+    elementImg.remove();
+  }
+};
+
+
 const createCardAdvert = function (cardData) {
 
   let cardAdvert = mapCardTemplate.cloneNode(true);
 
   mapPins.appendChild(cardAdvert);
 
-  cardAdvert.querySelector(`.popup__avatar`).src = cardData.author.avatar;
-  cardAdvert.querySelector(`.popup__title`).textContent = cardData.offer.title;
-  cardAdvert.querySelector(`.popup__text--address`).textContent = cardData.offer.address;
-  cardAdvert.querySelector(`.popup__text--price`).textContent = `${cardData.offer.price}₽/ночь`;
-  cardAdvert.querySelector(`.popup__text--capacity`).textContent = `${cardData.offer.rooms} комнат для ${cardData.offer.guests}`;
-  cardAdvert.querySelector(`.popup__text--time`).textContent = `Заезд после ${cardData.offer.checkin}, выезд до ${cardData.offer.checkout}`;
-  cardAdvert.querySelector(`.popup__description`).textContent = cardData.offer.description;
+
+  updateCardImg(cardAdvert, `.popup__avatar`, cardData.author.avatar);
+  updateCardData(cardAdvert, `.popup__title`, cardData.offer.title);
+  updateCardData(cardAdvert, `.popup__text--address`, cardData.offer.address);
+  updateCardData(cardAdvert, `.popup__text--price`, cardData.offer.price ? `${cardData.offer.price}₽/ночь` : null);
+  updateCardData(cardAdvert, `.popup__text--capacity`, cardData.offer.rooms && cardData.offer.guests ? `${cardData.offer.rooms} комнат для ${cardData.offer.guests}` : null);
+  updateCardData(cardAdvert, `.popup__text--time`, cardData.offer.checkin && cardData.offer.checkout ? `Заезд после ${cardData.offer.checkin}, выезд до ${cardData.offer.checkout}` : null);
+
+
+  cardAdvert.querySelector(`.popup__description`).textContent = getCardType(cardData.offer.description);
+
   cardAdvert.querySelector(`.popup__type`).textContent = getCardType(cardData.offer.type);
 
   let cardAdvertFeatures = cardAdvert.querySelector(`.popup__features`);
@@ -149,8 +172,9 @@ const createCardAdvert = function (cardData) {
     cardAdvertFeatures.appendChild(advertCardFeatureClone);
   }
 
-  let cardAdvertPhotos = cardAdvert.querySelector(`.popup__photos`);
-  cardAdvertPhotos.querySelector(`.popup__photo`).src = cardData.offer.photos;
+  // можно заменить на cardAdvertFeatures.innerHTML = randomArray.map((item) => `<li class="popup__feature popup__feature--${item}"></li>`).join(``);
+
+  updateCardImg(cardAdvert, `.popup__photo`, cardData.offer.photos);
 
   return cardAdvert;
 };
