@@ -3,6 +3,7 @@
 const TITLE = [`Уютное место`, `Отдых у моря`, `Для веселой компании`, `Семейная идилия`, `То что надо`, `Дом в облаках`, `Спортивное место`, `Романтическое место`];
 const PRICE = [1000, 1500, 2000, 2500, 3500, 4000, 4100, 10000];
 const TYPE = [`palace`, `flat`, `house`, `bungalow`];
+const houseType = {palace: `Дворец`, flat: `Квартира`, house: `Дом`, bungalow: `Бунгало`};
 const ROOMS = [1, 2, 3, 4, 5];
 const GUESTS = [1, 2, 3, 4];
 const CHECKIN_CHECKOUT = [`12:00`, `13:00`, `14:00`];
@@ -38,7 +39,7 @@ const removeItemFromArray = function (array, index) {
     } else {
       return false;
     }
-    /* можно записать return i !== index;*/
+    /* заменить return i !== index; */
   });
   return filteredArray;
 };
@@ -105,16 +106,16 @@ const getCardType = function (cardDataType) {
   let cardType;
   switch (cardDataType) {
     case `flat`:
-      cardType = `Квартира`;
+      cardType = houseType.flat;
       break;
     case `bungalow`:
-      cardType = `Бунгало`;
+      cardType = houseType.bungalow;
       break;
     case `house`:
-      cardType = `Дом`;
+      cardType = houseType.house;
       break;
     case `palace`:
-      cardType = `Дворец`;
+      cardType = houseType.palace;
       break;
   }
   return cardType;
@@ -153,8 +154,7 @@ const createCardAdvert = function (cardData) {
   updateCardData(cardAdvert, `.popup__text--capacity`, cardData.offer.rooms && cardData.offer.guests ? `${cardData.offer.rooms} комнат для ${cardData.offer.guests}` : null);
   updateCardData(cardAdvert, `.popup__text--time`, cardData.offer.checkin && cardData.offer.checkout ? `Заезд после ${cardData.offer.checkin}, выезд до ${cardData.offer.checkout}` : null);
 
-
-  cardAdvert.querySelector(`.popup__description`).textContent = getCardType(cardData.offer.description);
+  updateCardData(cardAdvert, `.popup__description`, cardData.offer.description);
 
   cardAdvert.querySelector(`.popup__type`).textContent = getCardType(cardData.offer.type);
 
@@ -172,12 +172,18 @@ const createCardAdvert = function (cardData) {
     cardAdvertFeatures.appendChild(advertCardFeatureClone);
   }
 
-  // можно заменить на cardAdvertFeatures.innerHTML = randomArray.map((item) => `<li class="popup__feature popup__feature--${item}"></li>`).join(``);
+  // заменить на cardAdvertFeatures.innerHTML = randomArray.map((item) => `<li class="popup__feature popup__feature--${item}"></li>`).join(``);
 
   updateCardImg(cardAdvert, `.popup__photo`, cardData.offer.photos);
 
   return cardAdvert;
 };
 
-const cardAdvert = createCardAdvert(getNewCard(0));
-mapElement.insertBefore(cardAdvert, filters);
+
+let cardsArray = [];
+for (let i = 0; i < maxOffer; i++) {
+  cardsArray.push(createCardAdvert(getNewCard(i)));
+}
+
+mapElement.insertBefore(cardsArray[0], filters);
+
