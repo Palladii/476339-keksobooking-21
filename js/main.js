@@ -3,7 +3,7 @@
 const TITLE = [`Уютное место`, `Отдых у моря`, `Для веселой компании`, `Семейная идилия`, `То что надо`, `Дом в облаках`, `Спортивное место`, `Романтическое место`];
 const PRICE = [1000, 1500, 2000, 2500, 3500, 4000, 4100, 10000];
 const TYPE = [`palace`, `flat`, `house`, `bungalow`];
-const houseTypes = {palace: `Дворец`, flat: `Квартира`, house: `Дом`, bungalow: `Бунгало`};
+const avaliableHouseTypes = {bungalow: `bungalow`, flat: `flat`, house: `house`, palace: `palace`};
 const ROOMS = [1, 2, 3, 4, 5];
 const GUESTS = [1, 2, 3, 4];
 const CHECKIN_CHECKOUT = [`12:00`, `13:00`, `14:00`];
@@ -18,20 +18,18 @@ const maxOffer = 8;
 const PIN_WIDTH = 40;
 const PIN_HEIGHT = 44;
 const PIN_TIP = 22;
+const form = document.querySelector(`.ad-form`);
 const roomNumber = document.querySelector(`#room_number`);
 const capacity = document.querySelector(`#capacity`);
-const typeHousing = document.querySelector(`#type`);
-const price = document.querySelector(`#price`);
 const map = document.querySelector(`.map`);
 const mapPins = document.querySelector(`.map__pins`);
 const buttonTemplate = document.querySelector(`#pin`).content.querySelector(`button`);
 const mainMapPin = mapPins.querySelector(`.map__pin--main`);
-const form = document.querySelector(`.ad-form`);
 const fieldsets = form.querySelectorAll(`fieldset`);
 const filters = document.querySelector(`.map__filters`);
 const address = form.querySelector(`#address`);
-const timeIn = document.querySelector(`#timein`);
-const timeOut = document.querySelector(`#timeout`);
+const checkIn = document.querySelector(`#timein`);
+const checkOut = document.querySelector(`#timeout`);
 
 // Активирует карту
 const getMapOpen = function () {
@@ -172,23 +170,15 @@ mapPins.appendChild(fragment);
 
 const mapCardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 
+const houseType = {
+  [avaliableHouseTypes.bungalow]: `Бунгало`,
+  [avaliableHouseTypes.flat]: `Квартира`,
+  [avaliableHouseTypes.house]: `Дом`,
+  [avaliableHouseTypes.palace]: `Дворец`
+};
+
 const getCardType = function (cardDataType) {
-  let cardType;
-  switch (cardDataType) {
-    case `flat`:
-      cardType = houseTypes.flat;
-      break;
-    case `bungalow`:
-      cardType = houseTypes.bungalow;
-      break;
-    case `house`:
-      cardType = houseTypes.house;
-      break;
-    case `palace`:
-      cardType = houseTypes.palace;
-      break;
-  }
-  return cardType;
+  return houseType[cardDataType];
 };
 
 const updateCardData = function (cardAdvert, selector, value) {
@@ -301,48 +291,38 @@ capacity.addEventListener(`change`, function () {
   validateRoom();
 });
 
-const validateHousing = function () {
-  const valueHousing = typeHousing.value;
-  if (valueHousing === `Бунгало`) {
-    price.placeholder = 0;
-    price.min = 0;
-    typeHousing.setCustomValidity(`Минимальная цена за ночь 0`);
-  } else if (valueHousing === `Квартира`) {
-    price.placeholder = 1000;
-    price.min = 1000;
-    typeHousing.setCustomValidity(`Минимальная цена за ночь 1 000`);
-  } else if (valueHousing === `Дом`) {
-    price.placeholder = 5000;
-    price.min = 5000;
-    typeHousing.setCustomValidity(`Минимальная цена за ночь 5 000`);
-  } else if (valueHousing === `Дворец`) {
-    price.placeholder = 10000;
-    price.min = 10000;
-    typeHousing.setCustomValidity(`Минимальная цена за ночь 10 000`);
-  } else {
-    typeHousing.setCustomValidity(``);
+let typesRus = {
+  flat: {
+    translate: `Квартира`,
+    minPrice: 1000
+  },
+  bungalow: {
+    translate: `Бунгало`,
+    minPrice: 0
+  },
+  house: {
+    translate: `Дом`,
+    minPrice: 5000
+  },
+  palace: {
+    translate: `Дворец`,
+    minPrice: 10000
   }
 };
-validateHousing();
-
-typeHousing.addEventListener(`change`, function () {
-  validateHousing();
-});
-price.addEventListener(`change`, function () {
-  validateHousing();
-});
-
-const getTimeOut = function () {
-  if (timeOut.value !== timeIn.value) {
-    timeOut.setCustomValidity(`Время выезда не может быть позже ` + timeIn.value);
-  } else {
-    timeOut.setCustomValidity(``);
-  }
+let typeOfHousing = form.querySelector(`select[name="type"]`);
+let priceOfHousing = form.querySelector(`input[name="price"]`);
+let validateMinPriceOfHousing = () => {
+  let type = typesRus[typeOfHousing.value];
+  priceOfHousing.placeholder = type.minPrice;
+  priceOfHousing.min = type.minPrice;
 };
+typeOfHousing.addEventListener(`change`, validateMinPriceOfHousing);
 
-timeOut.addEventListener(`change`, function () {
-  getTimeOut();
+checkIn.addEventListener(`change`, function (evt) {
+  checkOut.value = evt.target.value;
 });
-timeIn.addEventListener(`change`, function () {
-  getTimeOut();
+checkOut.addEventListener(`change`, function (evt) {
+  checkIn.value = evt.target.value;
 });
+
+
