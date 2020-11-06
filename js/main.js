@@ -3,7 +3,7 @@
 const TITLE = [`Уютное место`, `Отдых у моря`, `Для веселой компании`, `Семейная идилия`, `То что надо`, `Дом в облаках`, `Спортивное место`, `Романтическое место`];
 const PRICE = [1000, 1500, 2000, 2500, 3500, 4000, 4100, 10000];
 const TYPE = [`palace`, `flat`, `house`, `bungalow`];
-const houseType = {palace: `Дворец`, flat: `Квартира`, house: `Дом`, bungalow: `Бунгало`};
+const avaliableHouseTypes = {bungalow: `bungalow`, flat: `flat`, house: `house`, palace: `palace`};
 const ROOMS = [1, 2, 3, 4, 5];
 const GUESTS = [1, 2, 3, 4];
 const CHECKIN_CHECKOUT = [`12:00`, `13:00`, `14:00`];
@@ -15,33 +15,70 @@ const maxMapX = 1160;
 const minMapY = 130;
 const maxMapY = 630;
 const maxOffer = 8;
-
-const mapElement = document.querySelector(`.map`);
-mapElement.classList.remove(`map--faded`);
-
+const PIN_WIDTH = 40;
+const PIN_HEIGHT = 44;
+const PIN_TIP = 22;
+const form = document.querySelector(`.ad-form`);
+const roomNumber = document.querySelector(`#room_number`);
+const capacity = document.querySelector(`#capacity`);
+const map = document.querySelector(`.map`);
 const mapPins = document.querySelector(`.map__pins`);
 const buttonTemplate = document.querySelector(`#pin`).content.querySelector(`button`);
+const mainMapPin = mapPins.querySelector(`.map__pin--main`);
+const fieldsets = form.querySelectorAll(`fieldset`);
+const filters = document.querySelector(`.map__filters`);
+const address = form.querySelector(`#address`);
+const checkIn = document.querySelector(`#timein`);
+const checkOut = document.querySelector(`#timeout`);
 
+// Активирует карту
+const getMapOpen = function () {
+  document.querySelector(`.map`).classList.remove(`map--faded`);
+};
+
+// Деактивирует элементы
+form.classList.add(`ad-form--disabled`);
+
+for (let field of fieldsets) {
+  field.setAttribute(`disabled`, `disabled`);
+}
+
+filters.setAttribute(`disabled`, `disabled`);
+
+// Активирует поля
+const getFieldsetActive = function () {
+  for (let field of fieldsets) {
+    field.removeAttribute(`disabled`, `disabled`);
+  }
+  filters.removeAttribute(`disabled`, `disabled`);
+};
+
+// Середина метки
+const PIN_LOCATION_X = parseInt(mainMapPin.style.left, 10) - PIN_WIDTH / 2;
+const PIN_LOCATION_Y = parseInt(mainMapPin.style.top, 10) - PIN_HEIGHT / 2;
+
+// Функция вычисления адреса
+const getAddress = function () {
+  address.value = `${PIN_LOCATION_X}, ${PIN_LOCATION_Y}`;
+};
+getAddress();
+
+// Случайное число от min и до max
 const getRandomInteger = function (min, max) {
   const rand = min + Math.random() * (max + 1 - min);
   return Math.floor(rand);
 };
 
+// Выбирает случайный элемент массива
 const getRandomElement = function (items) {
   const item = items[Math.floor(Math.random() * items.length)];
   return item;
 };
 
+// Получаем новые массивы со случайным числом элементов
 const removeItemFromArray = function (array, index) {
   const filteredArray = array.filter(function (item, i) {
-    if (index !== i) {
-      return true;
-    } else {
-      return false;
-    }
-    /* заменить return i !== index; */
-  });
-  return filteredArray;
+    return i !== index;
 };
 
 const getRandomSubArray = function (array) {
@@ -54,10 +91,11 @@ const getRandomSubArray = function (array) {
   return newArray;
 };
 
-const randomArray = getRandomSubArray(FEATURES);
 
+// Генерация карточки объявления
 const getNewCard = function (i) {
   return {
+    index: i,
     author: {
       avatar: `img/avatars/user0${i + 1}.png`
     },
@@ -81,62 +119,83 @@ const getNewCard = function (i) {
   };
 };
 
-
+// Получаем метку на карте
 const renderButton = function (cardData) {
   let buttonPin = buttonTemplate.cloneNode(true);
   buttonPin.style.left = `${cardData.location.x}px`;
   buttonPin.style.top = `${cardData.location.y}px`;
   buttonPin.querySelector(`img`).src = cardData.author.avatar;
+  buttonPin.dataset.index = cardData.index; // 0, 1, 2
+  buttonPin.classList.add(`hidden`);
   return buttonPin;
 };
 
-const fragment = document.createDocumentFragment();
+const cardsList = [];
+const pins = [];
+
+// Активация карты по клику
+mainMapPin.addEventListener(`mousedown`, function (evt) {
+  if (evt.button === 0) {
+    getMapOpen();
+    address.value = `${PIN_LOCATION_X}, ${PIN_LOCATION_Y + PIN_TIP}`;
+    form.classList.remove(`ad-form--disabled`);
+    getFieldsetActive();
+    pins.forEach((pin) => pin.classList.remove(`hidden`));
+  }
+});
+
+// Активация карты по нажатию enter
+mainMapPin.addEventListener(`keydown`, function (event) {
+  if (event.key === `Enter`) {
+    getMapOpen();
+    address.value = `${PIN_LOCATION_X}, ${PIN_LOCATION_Y + PIN_TIP}`;
+    form.classList.remove(`ad-form--disabled`);
+    getFieldsetActive();
+    pins.forEach((pin) => pin.classList.remove(`hidden`));
+  }
+});
+
+const fragment = document.createDocumentFragment(); // Создает новый пустой DocumentFragment
 for (let i = 0; i < maxOffer; i++) {
-  fragment.appendChild(renderButton(getNewCard(i)));
+  const cardData = getNewCard(i);
+  const newPin = renderButton(cardData);
+  cardsList.push(cardData);
+  pins.push(newPin);
+  fragment.appendChild(newPin);
 }
 
 mapPins.appendChild(fragment);
 
-// module3-task2
-
 const mapCardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
-const filters = document.querySelector(`.map__filters-container`);
+
+const houseType = {
+  [avaliableHouseTypes.bungalow]: `Бунгало`,
+  [avaliableHouseTypes.flat]: `Квартира`,
+  [avaliableHouseTypes.house]: `Дом`,
+  [avaliableHouseTypes.palace]: `Дворец`
+};
+
 
 const getCardType = function (cardDataType) {
-  let cardType;
-  switch (cardDataType) {
-    case `flat`:
-      cardType = houseType.flat;
-      break;
-    case `bungalow`:
-      cardType = houseType.bungalow;
-      break;
-    case `house`:
-      cardType = houseType.house;
-      break;
-    case `palace`:
-      cardType = houseType.palace;
-      break;
-  }
-  return cardType;
+  return houseType[cardDataType];
 };
 
 const updateCardData = function (cardAdvert, selector, value) {
   const element = cardAdvert.querySelector(selector);
   if (value) {
     element.textContent = value;
-  } else {
-    element.remove();
+    return;
   }
+  element.remove();
 };
 
 const updateCardImg = function (cardAdvert, selector, value) {
   const elementImg = cardAdvert.querySelector(selector);
   if (value) {
     elementImg.src = value;
-  } else {
-    elementImg.remove();
+    return;
   }
+  elementImg.remove();
 };
 
 
@@ -157,8 +216,6 @@ const createCardAdvert = function (cardData) {
   updateCardData(cardAdvert, `.popup__description`, cardData.offer.description);
 
   cardAdvert.querySelector(`.popup__type`).textContent = getCardType(cardData.offer.type);
-
-  let cardAdvertFeatures = cardAdvert.querySelector(`.popup__features`);
   let cardAdvertFeaturesList = cardAdvert.querySelectorAll(`.popup__feature`);
   let cardAdvertFeature = cardAdvert.querySelector(`.popup__feature--wifi`).cloneNode(true);
 
@@ -166,13 +223,9 @@ const createCardAdvert = function (cardData) {
     cardAdvertFeaturesList[i].remove();
   }
 
-  for (let i = 0; i < randomArray.length; i++) {
-    let advertCardFeatureClone = cardAdvertFeature.cloneNode(true);
-    advertCardFeatureClone.classList.add(`popup__feature--${randomArray[i + 1]}`);
-    cardAdvertFeatures.appendChild(advertCardFeatureClone);
-  }
 
-  // заменить на cardAdvertFeatures.innerHTML = randomArray.map((item) => `<li class="popup__feature popup__feature--${item}"></li>`).join(``);
+  cardAdvertFeature.innerHTML = cardData.offer.features.map((item) => `<li class="popup__feature popup__feature--${item}"></li>`).join(``);
+
 
   updateCardImg(cardAdvert, `.popup__photo`, cardData.offer.photos);
 
@@ -180,10 +233,99 @@ const createCardAdvert = function (cardData) {
 };
 
 
-let cardsArray = [];
-for (let i = 0; i < maxOffer; i++) {
-  cardsArray.push(createCardAdvert(getNewCard(i)));
-}
+/* Открывает и закрывает карточку */
+const removeMapCard = function () {
+  map.querySelector(`.map__card`).remove();
+};
 
-mapElement.insertBefore(cardsArray[0], filters);
+const onPopupСloseClick = (evt) => {
+  evt.preventDefault();
+  removeMapCard();
+};
+const onEscPress = (evt) => {
+  if (evt.key === `Escape`) {
+    evt.preventDefault();
+    removeMapCard();
+  }
+};
+
+pins.forEach((pin) => {
+  pin.addEventListener(`click`, function () {
+    if (map.querySelector(`.map__card`)) {
+      removeMapCard();
+      const cardData = cardsList[pin.dataset.index];
+      createCardAdvert(cardData);
+    } else {
+      const cardData = cardsList[pin.dataset.index];
+      createCardAdvert(cardData);
+    }
+    const popupСlose = document.querySelector(`.popup__close`);
+    popupСlose.addEventListener(`click`, onPopupСloseClick);
+    map.addEventListener(`keydown`, onEscPress);
+  });
+});
+
+/* Валидация */
+const validateRoom = function () {
+  const valueRoomNumber = Number(roomNumber.value);
+  const valueCapacity = Number(capacity.value);
+
+  if (valueCapacity === 1 && valueRoomNumber === 100) {
+    roomNumber.setCustomValidity(`Много лишних комнат`);
+  } else if (valueCapacity === 2 && valueRoomNumber < 2) {
+    roomNumber.setCustomValidity(`Выберите не менее двух комнат`);
+  } else if (valueCapacity === 2 && valueRoomNumber > 3) {
+    roomNumber.setCustomValidity(`Много лишних комнат`);
+  } else if (valueCapacity === 3 && valueRoomNumber !== 3) {
+    roomNumber.setCustomValidity(`Вам необходимо выбрать 3 комнаты`);
+  } else if (valueCapacity === 0 && valueRoomNumber < 100) {
+    roomNumber.setCustomValidity(`Не для гостей`);
+  } else {
+    roomNumber.setCustomValidity(``);
+  }
+};
+validateRoom();
+
+roomNumber.addEventListener(`change`, function () {
+  validateRoom();
+});
+capacity.addEventListener(`change`, function () {
+  validateRoom();
+});
+
+let typesRus = {
+  flat: {
+    translate: `Квартира`,
+    minPrice: 1000
+  },
+  bungalow: {
+    translate: `Бунгало`,
+    minPrice: 0
+  },
+  house: {
+    translate: `Дом`,
+    minPrice: 5000
+  },
+  palace: {
+    translate: `Дворец`,
+    minPrice: 10000
+  }
+};
+let typeOfHousing = form.querySelector(`select[name="type"]`);
+let priceOfHousing = form.querySelector(`input[name="price"]`);
+let validateMinPriceOfHousing = () => {
+  let type = typesRus[typeOfHousing.value];
+  priceOfHousing.placeholder = type.minPrice;
+  priceOfHousing.min = type.minPrice;
+};
+typeOfHousing.addEventListener(`change`, validateMinPriceOfHousing);
+
+checkIn.addEventListener(`change`, function (evt) {
+  checkOut.value = evt.target.value;
+});
+checkOut.addEventListener(`change`, function (evt) {
+  checkIn.value = evt.target.value;
+});
+
+
 
