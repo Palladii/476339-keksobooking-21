@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  // двигаем pin
+  // перемещает pin
 
   window.map.mainMapPin.addEventListener(`mousedown`, function (evt) {
     evt.preventDefault(); // обработаем событие начала перетаскивания нашего диалога mousedown
@@ -9,7 +9,7 @@
     let startCoords = {
       x: evt.clientX,
       y: evt.clientY
-    }; // Запомним координаты точки, с которой мы начали перемещать диалог
+    }; // Запоминает координаты точки, с которой мы начали перемещать диалог
 
     let dragged = false;
 
@@ -39,16 +39,16 @@
         window.map.mainMapPin.style.left = newOffsetLeft + `px`;
       }
 
-    }; // При каждом движении мыши нам нужно обновлять смещение относительно первоначальной точки, чтобы диалог смещался на необходимую величину
+    }; // При каждом движении мыши обновляет смещение относительно первоначальной точки, чтобы диалог смещался на необходимую величину
 
     const onMouseUp = function (upEvt) {
       upEvt.preventDefault();
 
       document.removeEventListener(`mousemove`, onMouseMove);
-      document.removeEventListener(`mouseup`, onMouseUp); // При отпускании кнопки мыши нужно переставать слушать события движения мыши
+      document.removeEventListener(`mouseup`, onMouseUp); // при отпускании кнопки мыши нужно переставать слушать события движения мыши
 
       if (dragged) {
-        //  отменяем действие по умолчанию, если перемещение имело место.
+        //  отменяет действие по умолчанию, если перемещение имело место.
         const onClickPreventDefault = function (clickEvt) {
           clickEvt.preventDefault();
           window.map.mainMapPin.removeEventListener(`click`, onClickPreventDefault);

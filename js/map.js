@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   const mapPins = document.querySelector(`.map__pins`);
   const mainMapPin = mapPins.querySelector(`.map__pin--main`);
   const PIN_WIDTH = 40;
@@ -147,7 +146,6 @@
     let cardAdvert = mapCardTemplate.cloneNode(true);
 
     mapPins.appendChild(cardAdvert);
-
 
     updateCardImg(cardAdvert, `.popup__avatar`, cardData.author.avatar);
     updateCardData(cardAdvert, `.popup__title`, cardData.offer.title);

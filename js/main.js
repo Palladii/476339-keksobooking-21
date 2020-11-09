@@ -1,14 +1,9 @@
 'use strict';
 (function () {
-
-
   const form = document.querySelector(`.ad-form`);
   const map = document.querySelector(`.map`);
-
-
   const fieldsets = form.querySelectorAll(`fieldset`);
   const filters = document.querySelector(`.map__filters`);
-
 
   // Активирует карту
   const getMapOpen = function () {

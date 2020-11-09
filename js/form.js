@@ -2,7 +2,6 @@
 
 
 (function () {
-
   /* Валидация */
   const checkIn = document.querySelector(`#timein`);
   const checkOut = document.querySelector(`#timeout`);
@@ -76,9 +75,7 @@
     evt.preventDefault();
   });
 
-
-  // Добавляем обработчик клика на кнопку отправки формы
-
+  // Добавляет обработчик клика на кнопку отправки формы
   let title = window.main.form.querySelector(`input[name="title"]`);
 
   window.main.form.addEventListener(`submit`, function (evt) {
