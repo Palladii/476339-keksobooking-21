@@ -3,7 +3,7 @@
   const form = document.querySelector(`.ad-form`);
   const map = document.querySelector(`.map`);
   const fieldsets = form.querySelectorAll(`fieldset`);
-  const filters = document.querySelector(`.map__filters`);
+  const filters = document.querySelector(`.map__filters-container`);
 
   // Активирует карту
   const getMapOpen = function () {
@@ -11,14 +11,17 @@
   };
 
   // Деактивирует элементы
-  form.classList.add(`ad-form--disabled`);
 
-  for (let field of fieldsets) {
-    field.setAttribute(`disabled`, `disabled`);
-  }
+  const deactivate = function () {
+    form.classList.add(`ad-form--disabled`);
 
-  filters.setAttribute(`disabled`, `disabled`);
+    for (let field of fieldsets) {
+      field.setAttribute(`disabled`, `disabled`);
+    }
 
+    filters.setAttribute(`disabled`, `disabled`);
+  };
+  deactivate();
   // Активирует поля
   const getFieldsetActive = function () {
     for (let field of fieldsets) {
@@ -32,5 +35,6 @@
     getMapOpen,
     getFieldsetActive,
     map,
+    deactivate
   };
 })();

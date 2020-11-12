@@ -1,13 +1,12 @@
 'use strict';
 
-
 (function () {
   /* Валидация */
   const checkIn = document.querySelector(`#timein`);
   const checkOut = document.querySelector(`#timeout`);
   const roomNumber = document.querySelector(`#room_number`);
   const capacity = document.querySelector(`#capacity`);
-
+  const main = document.querySelector(`main`);
   const validateRoom = function () {
 
     const valueRoomNumber = Number(roomNumber.value);
@@ -70,23 +69,69 @@
     checkIn.value = evt.target.value;
   });
 
+  const getSuccess = function () {
+    const newSuccessPopup = document.querySelector(`#success`).content.cloneNode(true);
+    main.appendChild(newSuccessPopup);
 
-  window.main.form.addEventListener(`submit`, function (evt) {
+    const deleteSuccessPopup = () => {
+      main.removeChild(document.querySelector(`.success`));
+      document.removeEventListener(`mousedown`, onShowSuccessMousedown);
+      document.removeEventListener(`keydown`, onShowSuccessSaveEscPress);
+    };
+
+    const onShowSuccessSaveEscPress = (evt) => {
+      if (evt.key === `Escape`) {
+        deleteSuccessPopup();
+      }
+    };
+
+    const onShowSuccessMousedown = () => {
+      deleteSuccessPopup();
+    };
+
+    document.addEventListener(`mousedown`, onShowSuccessMousedown);
+    document.addEventListener(`keydown`, onShowSuccessSaveEscPress);
+  };
+
+  const getError = () => {
+    const newErrorPopup = document.querySelector(`#error`).content.cloneNode(true);
+    main.appendChild(newErrorPopup);
+
+    const deleteErrorPopup = () => {
+      main.removeChild(document.querySelector(`.error`));
+      document.removeEventListener(`mousedown`, onErrorSaveMousedown);
+      document.removeEventListener(`keydown`, onErrorSaveEscPress);
+    };
+
+    const onErrorSaveClick = () => {
+      deleteErrorPopup();
+    };
+
+    const onErrorSaveMousedown = () => {
+      deleteErrorPopup();
+    };
+
+    const onErrorSaveEscPress = (evt) => {
+      if (evt.key === `Escape`) {
+        deleteErrorPopup();
+      }
+    };
+
+    document.querySelector(`.error__button`).addEventListener(`click`, onErrorSaveClick);
+    document.addEventListener(`mousedown`, onErrorSaveMousedown);
+    document.addEventListener(`keydown`, onErrorSaveEscPress);
+  };
+
+  let deactivateAfterSubmit = function () {
+    window.main.map.classList.add(`map--faded`);
+    window.main.deactivate();
+  };
+
+  window.main.form.addEventListener(`submit`, (evt) => {
     evt.preventDefault();
-  });
-
-  // Добавляет обработчик клика на кнопку отправки формы
-  let title = window.main.form.querySelector(`input[name="title"]`);
-
-  window.main.form.addEventListener(`submit`, function (evt) {
-    evt.preventDefault();
-    if (title.value === ``) {
-      title.setCustomValidity(`Заголовок - обязательное поле`);
-    } else if (priceOfHousing.value === ``) {
-      priceOfHousing.setCustomValidity(`Цена за ночь - обязательное поле`);
-    } else {
-      validateRoom();
-    }
+    window.download.upload(new FormData(window.main.form), () => {
+      deactivateAfterSubmit();
+      getSuccess();
+    }, getError());
   });
 })();
-
