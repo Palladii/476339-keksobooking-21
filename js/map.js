@@ -14,6 +14,7 @@
   const minMapY = 130;
   const maxMapY = 630;
   const avaliableHouseTypes = {bungalow: `bungalow`, flat: `flat`, house: `house`, palace: `palace`};
+  const mapFilters = document.querySelector('.map__filters');
 
   // Середина метки
   const PIN_LOCATION_X = parseInt(mainMapPin.style.left, 10) - PIN_WIDTH / 2;
@@ -140,10 +141,27 @@
     }
   };
 
+  let typeHousing = `Любой тип жилья`;
+  let price = `Любая`;
+  let countRooms = `Любой число комнат`;
+  let countGuests = `Любое число гостей`;
+  let features = `Любой число комнат`;
+
+  let data = [];
+
+  const housingType = mapFilters.querySelector('#housing-type');
+  housingType.addEventListener('click', function () {
+    const housingOption = housingType.querySelector('.option');
+    typeHousing = housingOption.value.selected;
+  });
+
+
   const successHandler = function (adsData) {
+    data = adsData;
+    console.log(data);
     const fragment = document.createDocumentFragment();
     for (let i = 0; i < MAX_SIMILAR_PINS_COUNT; i++) {
-      const cardData = adsData[i];
+      const cardData = data[i];
       const newPin = renderButton(cardData);
       cardsList.push(cardData);
       pins.push(newPin);
