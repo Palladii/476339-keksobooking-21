@@ -11,7 +11,6 @@
   };
 
   // Деактивирует элементы
-
   const deactivate = function () {
     form.classList.add(`ad-form--disabled`);
 
@@ -22,6 +21,7 @@
     filters.setAttribute(`disabled`, `disabled`);
   };
   deactivate();
+
   // Активирует поля
   const getFieldsetActive = function () {
     for (let field of fieldsets) {

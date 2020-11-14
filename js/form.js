@@ -7,6 +7,12 @@
   const roomNumber = document.querySelector(`#room_number`);
   const capacity = document.querySelector(`#capacity`);
   const main = document.querySelector(`main`);
+
+  const INITIAL_PIN_POSITION = {
+    x: 570,
+    y: 375
+  };
+
   const validateRoom = function () {
 
     const valueRoomNumber = Number(roomNumber.value);
@@ -124,14 +130,28 @@
 
   let deactivateAfterSubmit = function () {
     window.main.map.classList.add(`map--faded`);
+    window.main.form.reset();
     window.main.deactivate();
+
+    const btnsPin = window.map.mapPins.querySelectorAll(`button`);
+    btnsPin.forEach((item) => {
+      if (item.className === `map__pin`) {
+        item.remove();
+      }
+    });
+
+    window.map.mainMapPin.style.left = INITIAL_PIN_POSITION.x + `px`;
+    window.map.mainMapPin.style.top = INITIAL_PIN_POSITION.y + `px`;
+    window.map.mapPins.querySelector(`.map__card`).remove();
   };
 
   window.main.form.addEventListener(`submit`, (evt) => {
     evt.preventDefault();
-    window.download.upload(new FormData(window.main.form), () => {
+
+    window.load.upload(new FormData(window.main.form), () => {
       deactivateAfterSubmit();
       getSuccess();
-    }, getError());
+    }, getError);
   });
 })();
+
