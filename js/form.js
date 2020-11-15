@@ -132,17 +132,10 @@
     window.main.map.classList.add(`map--faded`);
     window.main.form.reset();
     window.main.deactivate();
-
-    const btnsPin = window.map.mapPins.querySelectorAll(`button`);
-    btnsPin.forEach((item) => {
-      if (item.className === `map__pin`) {
-        item.remove();
-      }
-    });
-
+    window.map.hidePins();
     window.map.mainMapPin.style.left = INITIAL_PIN_POSITION.x + `px`;
     window.map.mainMapPin.style.top = INITIAL_PIN_POSITION.y + `px`;
-    window.map.mapPins.querySelector(`.map__card`).remove();
+    window.map.removeMapCard();
   };
 
   window.main.form.addEventListener(`submit`, (evt) => {
