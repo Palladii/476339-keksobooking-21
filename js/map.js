@@ -15,54 +15,6 @@
   const maxMapY = 630;
   const avaliableHouseTypes = {bungalow: `bungalow`, flat: `flat`, house: `house`, palace: `palace`};
 
-  let data = [];
-  const successHandler = function (adsData) {
-    data = adsData;
-    const fragment = document.createDocumentFragment();
-    for (let i = 0; i < MAX_SIMILAR_PINS_COUNT; i++) {
-      const cardData = data[i];
-      const newPin = renderButton(cardData);
-      cardsList.push(cardData);
-      pins.push(newPin);
-      fragment.appendChild(newPin);
-    }
-
-    mapPins.appendChild(fragment);
-
-    pins.forEach((pin, pinIndex) => {
-      pin.addEventListener(`click`, function () {
-        if (window.main.map.querySelector(`.map__card`)) {
-          removeMapCard();
-          const cardData = cardsList[pinIndex];
-          createCardAdvert(cardData);
-        } else {
-          const cardData = cardsList[pinIndex];
-          createCardAdvert(cardData);
-        }
-        const popupСlose = document.querySelector(`.popup__close`);
-        popupСlose.addEventListener(`click`, onPopupСloseClick);
-        window.main.map.addEventListener(`keydown`, onEscPress);
-      });
-    });
-    window.main.getMapOpen();
-    address.value = `${PIN_LOCATION_X}, ${PIN_LOCATION_Y + PIN_TIP}`;
-    window.main.form.classList.remove(`ad-form--disabled`);
-    window.main.getFieldsetActive();
-    pins.forEach((pin) => pin.classList.remove(`hidden`));
-  };
-
-  const errorHandler = function (errorMessage) {
-    const node = document.createElement(`div`);
-    node.style = `z-index: 100; margin: 300 auto; text-align: center; background-color: #FF6618;`;
-    node.style.position = `absolute`;
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = `30px`;
-
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement(`afterbegin`, node);
-  };
-
   // Середина метки
   const PIN_LOCATION_X = parseInt(mainMapPin.style.left, 10) - PIN_WIDTH / 2;
   const PIN_LOCATION_Y = parseInt(mainMapPin.style.top, 10) - PIN_HEIGHT / 2;
@@ -87,20 +39,25 @@
   const cardsList = [];
   const pins = [];
 
-  const openMap = function () {
-    window.load.getAdsData(successHandler, errorHandler);
-  };
   // Активация карты по клику
   mainMapPin.addEventListener(`mousedown`, function (evt) {
     if (evt.button === 0) {
-      openMap();
+      window.main.getMapOpen();
+      address.value = `${PIN_LOCATION_X}, ${PIN_LOCATION_Y + PIN_TIP}`;
+      window.main.form.classList.remove(`ad-form--disabled`);
+      window.main.getFieldsetActive();
+      pins.forEach((pin) => pin.classList.remove(`hidden`));
     }
   });
 
   // Активация карты по нажатию enter
   mainMapPin.addEventListener(`keydown`, function (event) {
     if (event.key === `Enter`) {
-      openMap();
+      window.main.getMapOpen();
+      address.value = `${PIN_LOCATION_X}, ${PIN_LOCATION_Y + PIN_TIP}`;
+      window.main.form.classList.remove(`ad-form--disabled`);
+      window.main.getFieldsetActive();
+      pins.forEach((pin) => pin.classList.remove(`hidden`));
     }
   });
 
@@ -153,16 +110,16 @@
     updateCardData(cardAdvert, `.popup__description`, cardData.offer.description);
 
     cardAdvert.querySelector(`.popup__type`).textContent = getCardType(cardData.offer.type);
-    const featuresContainer = cardAdvert.querySelector(`.popup__features`);
-    let cardAdvertFeaturesList = featuresContainer.querySelectorAll(`.popup__feature`);
-
+    let cardAdvertFeaturesList = cardAdvert.querySelectorAll(`.popup__feature`);
+    let cardAdvertFeature = cardAdvert.querySelector(`.popup__feature--wifi`).cloneNode(true);
 
     for (let i = 0; i < cardAdvertFeaturesList.length; i++) {
       cardAdvertFeaturesList[i].remove();
     }
-    featuresContainer.innerHTML = cardData.offer.features.map((item) => `<li class="popup__feature popup__feature--${item}"></li>`).join(``);
 
-    updateCardImg(cardAdvert, `.popup__photo`, cardData.offer.photos[0]);
+    cardAdvertFeature.innerHTML = cardData.offer.features.map((item) => `<li class="popup__feature popup__feature--${item}"></li>`).join(``);
+
+    updateCardImg(cardAdvert, `.popup__photo`, cardData.offer.photos);
 
     return cardAdvert;
   };
@@ -183,6 +140,47 @@
     }
   };
 
+  const successHandler = function (adsData) {
+    const fragment = document.createDocumentFragment();
+    for (let i = 0; i < MAX_SIMILAR_PINS_COUNT; i++) {
+      const cardData = adsData[i];
+      const newPin = renderButton(cardData);
+      cardsList.push(cardData);
+      pins.push(newPin);
+      fragment.appendChild(newPin);
+    }
+
+    mapPins.appendChild(fragment);
+
+    pins.forEach((pin, pinIndex) => {
+      pin.addEventListener(`click`, function () {
+        if (window.main.map.querySelector(`.map__card`)) {
+          removeMapCard();
+          const cardData = cardsList[pinIndex];
+          createCardAdvert(cardData);
+        } else {
+          const cardData = cardsList[pinIndex];
+          createCardAdvert(cardData);
+        }
+        const popupСlose = document.querySelector(`.popup__close`);
+        popupСlose.addEventListener(`click`, onPopupСloseClick);
+        window.main.map.addEventListener(`keydown`, onEscPress);
+      });
+    });
+  };
+
+  const errorHandler = function (errorMessage) {
+    const node = document.createElement(`div`);
+    node.style = `z-index: 100; margin: 300 auto; text-align: center; background-color: #FF6618;`;
+    node.style.position = `absolute`;
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = `30px`;
+
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement(`afterbegin`, node);
+  };
+  window.load.getAdsData(successHandler, errorHandler);
 
   window.map = {
     mainMapPin,
@@ -193,7 +191,6 @@
     minMapX,
     maxMapX,
     minMapY,
-    maxMapY,
-    data
+    maxMapY
   };
 })();
