@@ -12,7 +12,7 @@
 
   // Деактивирует элементы
 
-  const deactivate = function () {
+  const deactivateFormFilter = function () {
     form.classList.add(`ad-form--disabled`);
     for (let field of fieldsets) {
       field.setAttribute(`disabled`, `disabled`);
@@ -20,7 +20,7 @@
 
     filters.setAttribute(`disabled`, `disabled`);
   };
-  deactivate();
+  deactivateFormFilter();
   // Активирует поля
   const getFieldsetActive = function () {
     for (let field of fieldsets) {
@@ -34,7 +34,7 @@
     getMapOpen,
     getFieldsetActive,
     map,
-    deactivate,
+    deactivateFormFilter,
     filters
   };
 })();

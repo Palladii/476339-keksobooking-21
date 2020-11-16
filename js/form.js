@@ -8,7 +8,7 @@
   const capacity = document.querySelector(`#capacity`);
   const main = document.querySelector(`main`);
   const mapFilters = window.main.filters.querySelector(`.map__filters`);
-
+  const adFormReset = window.main.form.querySelector(`.ad-form__reset`);
   const INITIAL_PIN_POSITION = {
     x: 570,
     y: 375
@@ -129,11 +129,11 @@
     document.addEventListener(`keydown`, onErrorSaveEscPress);
   };
 
-  let deactivateAfterSubmit = function () {
+  let deactivate = function () {
     window.main.map.classList.add(`map--faded`);
     window.main.form.reset();
     mapFilters.reset();
-    window.main.deactivate();
+    window.main.deactivateFormFilter();
     window.map.hidePins();
     window.map.mainMapPin.style.left = INITIAL_PIN_POSITION.x + `px`;
     window.map.mainMapPin.style.top = INITIAL_PIN_POSITION.y + `px`;
@@ -142,10 +142,14 @@
 
   window.main.form.addEventListener(`submit`, (evt) => {
     evt.preventDefault();
-
+    deactivate();
     window.load.upload(new FormData(window.main.form), () => {
-      deactivateAfterSubmit();
       getSuccess();
     }, getError);
+  });
+
+  adFormReset.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    deactivate();
   });
 })();
