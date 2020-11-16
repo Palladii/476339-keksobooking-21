@@ -14,7 +14,6 @@
 
   const deactivate = function () {
     form.classList.add(`ad-form--disabled`);
-
     for (let field of fieldsets) {
       field.setAttribute(`disabled`, `disabled`);
     }
@@ -35,6 +34,7 @@
     getMapOpen,
     getFieldsetActive,
     map,
-    deactivate
+    deactivate,
+    filters
   };
 })();

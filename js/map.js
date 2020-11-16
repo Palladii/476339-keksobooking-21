@@ -196,17 +196,16 @@
     document.body.insertAdjacentElement(`afterbegin`, node);
   };
   window.load.getAdsData(successHandler, errorHandler);
-  const housingType = window.main.map.querySelector(`#housing-type`);
-  const housingPrice = window.main.map.querySelector(`#housing-price`);
-  const housingRooms = window.main.map.querySelector(`#housing-rooms`);
-  const housingGuests = window.main.map.querySelector(`#housing-guests`);
-  const housingFeatures = window.main.map.querySelector(`#housing-features`);
+  const housingType = window.main.filters.querySelector(`#housing-type`);
+  const housingPrice = window.main.filters.querySelector(`#housing-price`);
+  const housingRooms = window.main.filters.querySelector(`#housing-rooms`);
+  const housingGuests = window.main.filters.querySelector(`#housing-guests`);
+  const housingFeatures = window.main.filters.querySelector(`#housing-features`);
+  const newType = housingType.value;
+  const newPrice = housingPrice.value;
+  const newRooms = housingRooms.value;
+  const newGuests = housingGuests.value;
   const filterFunction = function () {
-    const newType = housingType.value;
-    const newPrice = housingPrice.value;
-    const newRooms = housingRooms.value;
-    const newGuests = housingGuests.value;
-    const newFeatures = housingFeatures.value;
     // console.log(pinsData);
     // console.log(newPrice);
     let newPinsData = pinsData.filter(function (pinData) {
@@ -241,14 +240,10 @@
       }
       return pinData.offer.guests === Number(newGuests);
     });
-    console.log('START');
-    console.log(newPinsData);
-    console.log(newFeatures);
     newPinsData = newPinsData.filter(function (pinData) {
       const featuresOn = window.main.map.querySelectorAll(`.map__checkbox:checked`);
       return Array.from(featuresOn).every((featureOn) => pinData.offer.features.includes(featureOn.value));
     });
-    console.log(newPinsData);
     renderPins(newPinsData);
   };
   housingType.addEventListener(`change`, filterFunction);

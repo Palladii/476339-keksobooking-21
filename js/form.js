@@ -7,6 +7,7 @@
   const roomNumber = document.querySelector(`#room_number`);
   const capacity = document.querySelector(`#capacity`);
   const main = document.querySelector(`main`);
+  const mapFilters = window.main.filters.querySelector(`.map__filters`);
 
   const INITIAL_PIN_POSITION = {
     x: 570,
@@ -131,6 +132,7 @@
   let deactivateAfterSubmit = function () {
     window.main.map.classList.add(`map--faded`);
     window.main.form.reset();
+    mapFilters.reset();
     window.main.deactivate();
     window.map.hidePins();
     window.map.mainMapPin.style.left = INITIAL_PIN_POSITION.x + `px`;
