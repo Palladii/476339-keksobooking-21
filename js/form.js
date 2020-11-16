@@ -143,10 +143,10 @@
 
   window.main.form.addEventListener(`submit`, (evt) => {
     evt.preventDefault();
-    deactivate();
     window.load.upload(new FormData(window.main.form), () => {
       getSuccess();
     }, getError);
+    deactivate();
   });
 
   adFormReset.addEventListener(`click`, (evt) => {

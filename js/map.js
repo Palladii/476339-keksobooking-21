@@ -14,6 +14,11 @@
   const minMapY = 130;
   const maxMapY = 630;
   const avaliableHouseTypes = {bungalow: `bungalow`, flat: `flat`, house: `house`, palace: `palace`};
+  const housingType = window.main.map.querySelector(`#housing-type`);
+  const housingPrice = window.main.map.querySelector(`#housing-price`);
+  const housingRooms = window.main.map.querySelector(`#housing-rooms`);
+  const housingGuests = window.main.map.querySelector(`#housing-guests`);
+  const housingFeatures = window.main.map.querySelector(`#housing-features`);
   let pinsData = [];
 
   // Середина метки
@@ -196,16 +201,12 @@
     document.body.insertAdjacentElement(`afterbegin`, node);
   };
   window.load.getAdsData(successHandler, errorHandler);
-  const housingType = window.main.filters.querySelector(`#housing-type`);
-  const housingPrice = window.main.filters.querySelector(`#housing-price`);
-  const housingRooms = window.main.filters.querySelector(`#housing-rooms`);
-  const housingGuests = window.main.filters.querySelector(`#housing-guests`);
-  const housingFeatures = window.main.filters.querySelector(`#housing-features`);
-  const newType = housingType.value;
-  const newPrice = housingPrice.value;
-  const newRooms = housingRooms.value;
-  const newGuests = housingGuests.value;
+
   const filterFunction = function () {
+    const newType = housingType.value;
+    const newPrice = housingPrice.value;
+    const newRooms = housingRooms.value;
+    const newGuests = housingGuests.value;
     // console.log(pinsData);
     // console.log(newPrice);
     let newPinsData = pinsData.filter(function (pinData) {
