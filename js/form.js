@@ -138,6 +138,7 @@
     window.map.mainMapPin.style.left = INITIAL_PIN_POSITION.x + `px`;
     window.map.mainMapPin.style.top = INITIAL_PIN_POSITION.y + `px`;
     window.map.removeMapCard();
+    window.map.address.value = `${parseInt(window.map.mainMapPin.style.left, 10)}, ${parseInt(window.map.mainMapPin.style.top, 10) + window.map.PIN_TIP}`;
   };
 
   window.main.form.addEventListener(`submit`, (evt) => {

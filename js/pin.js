@@ -55,7 +55,6 @@
         };
         window.map.mainMapPin.addEventListener(`click`, onClickPreventDefault);
       }
-
       window.map.address.value = `${parseInt(window.map.mainMapPin.style.left, 10)}, ${parseInt(window.map.mainMapPin.style.top, 10) + window.map.PIN_TIP}`;
     };
 
