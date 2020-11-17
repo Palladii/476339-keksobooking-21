@@ -206,8 +206,6 @@
     const newPrice = housingPrice.value;
     const newRooms = housingRooms.value;
     const newGuests = housingGuests.value;
-    // console.log(pinsData);
-    // console.log(newPrice);
     let newPinsData = pinsData.filter(function (pinData) {
       if (newType === `any`) {
         return true;
@@ -230,8 +228,6 @@
       if (newRooms === `any`) {
         return true;
       }
-      // console.log(pinData.offer.rooms);
-      // console.log(newRooms);
       return pinData.offer.rooms === Number(newRooms);
     });
     newPinsData = newPinsData.filter(function (pinData) {
