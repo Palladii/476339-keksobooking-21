@@ -18,8 +18,26 @@
   const housingPrice = window.main.map.querySelector(`#housing-price`);
   const housingRooms = window.main.map.querySelector(`#housing-rooms`);
   const housingGuests = window.main.map.querySelector(`#housing-guests`);
-  const housingFeatures = window.main.map.querySelector(`#housing-features`);
+  const cardsList = [];
+  const pins = [];
   let pinsData = [];
+
+  const successHandler = function (adsData) {
+    pinsData = adsData;
+  };
+
+  const errorHandler = function (errorMessage) {
+    const node = document.createElement(`div`);
+    node.style = `z-index: 100; margin: 300 auto; text-align: center; background-color: #FF6618;`;
+    node.style.position = `absolute`;
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = `30px`;
+
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement(`afterbegin`, node);
+  };
+
 
   // Середина метки
   const PIN_LOCATION_X = parseInt(mainMapPin.style.left, 10) - PIN_WIDTH / 2;
@@ -42,23 +60,21 @@
     return buttonPin;
   };
 
-  const cardsList = [];
-  const pins = [];
 
-  // Активация карты по клику
   mainMapPin.addEventListener(`mousedown`, function (evt) {
     if (evt.button === 0) {
-      renderPins(pinsData);
+      window.load.getAdsData(function (adsData) {
+        pinsData = adsData;
+        renderPins(pinsData);
+      }, errorHandler);
     }
   });
 
-  // Активация карты по нажатию enter
   mainMapPin.addEventListener(`keydown`, function (event) {
     if (event.key === `Enter`) {
       renderPins(pinsData);
     }
   });
-
 
   const mapCardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 
@@ -140,8 +156,8 @@
   };
 
   const hidePins = function () {
-    let btnsPin = window.map.mapPins.querySelectorAll(`button`);
-    btnsPin.forEach((item) => {
+    let buttonsPin = window.map.mapPins.querySelectorAll(`button`);
+    buttonsPin.forEach((item) => {
       if (item.className === `map__pin`) {
         item.remove();
       }
@@ -184,23 +200,6 @@
     window.main.getFieldsetActive();
     pins.forEach((pin) => pin.classList.remove(`hidden`));
   };
-
-  const successHandler = function (adsData) {
-    pinsData = adsData;
-  };
-
-  const errorHandler = function (errorMessage) {
-    const node = document.createElement(`div`);
-    node.style = `z-index: 100; margin: 300 auto; text-align: center; background-color: #FF6618;`;
-    node.style.position = `absolute`;
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = `30px`;
-
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement(`afterbegin`, node);
-  };
-  window.load.getAdsData(successHandler, errorHandler);
 
   const filterFunction = function () {
     const newType = housingType.value;
@@ -245,13 +244,11 @@
       const featuresOn = window.main.map.querySelectorAll(`.map__checkbox:checked`);
       return Array.from(featuresOn).every((featureOn) => pinData.offer.features.includes(featureOn.value));
     });
-    renderPins(newPinsData);
+    window.debounce.setDebounce(renderPins(newPinsData));
   };
-  housingType.addEventListener(`change`, filterFunction);
-  housingPrice.addEventListener(`change`, filterFunction);
-  housingRooms.addEventListener(`change`, filterFunction);
-  housingGuests.addEventListener(`change`, filterFunction);
-  housingFeatures.addEventListener(`change`, filterFunction);
+
+  // window.main.filters.addEventListener(`change`, window.setDebounce(filterFunction));
+  window.main.filters.addEventListener(`change`, filterFunction);
 
   window.map = {
     mainMapPin,

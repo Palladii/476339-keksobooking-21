@@ -1,10 +1,11 @@
 'use strict';
 
 (function () {
-  var DEBOUNCE_INTERVAL = 300; // ms
+
+  const DEBOUNCE_INTERVAL = 500;
 
   const setDebounce = function (cb) {
-    var lastTimeout = null;
+    let lastTimeout = null;
 
     return function (...parameters) {
       if (lastTimeout) {
