@@ -7,12 +7,32 @@
   const roomNumber = document.querySelector(`#room_number`);
   const capacity = document.querySelector(`#capacity`);
   const main = document.querySelector(`main`);
-
+  const mapFilter = window.main.filter.querySelector(`.map__filters`);
+  const formReset = window.main.form.querySelector(`.ad-form__reset`);
   const INITIAL_PIN_POSITION = {
     x: 570,
     y: 375
   };
-
+  let TypesRus = {
+    flat: {
+      translate: `Квартира`,
+      minPrice: 1000
+    },
+    bungalow: {
+      translate: `Бунгало`,
+      minPrice: 0
+    },
+    house: {
+      translate: `Дом`,
+      minPrice: 5000
+    },
+    palace: {
+      translate: `Дворец`,
+      minPrice: 10000
+    }
+  };
+  let typeOfHousing = window.main.form.querySelector(`select[name="type"]`);
+  let priceOfHousing = window.main.form.querySelector(`input[name="price"]`);
   const validateRoom = function () {
 
     const valueRoomNumber = Number(roomNumber.value);
@@ -41,28 +61,8 @@
     validateRoom();
   });
 
-  let typesRus = {
-    flat: {
-      translate: `Квартира`,
-      minPrice: 1000
-    },
-    bungalow: {
-      translate: `Бунгало`,
-      minPrice: 0
-    },
-    house: {
-      translate: `Дом`,
-      minPrice: 5000
-    },
-    palace: {
-      translate: `Дворец`,
-      minPrice: 10000
-    }
-  };
-  let typeOfHousing = window.main.form.querySelector(`select[name="type"]`);
-  let priceOfHousing = window.main.form.querySelector(`input[name="price"]`);
   let validateMinPriceOfHousing = () => {
-    let type = typesRus[typeOfHousing.value];
+    let type = TypesRus[typeOfHousing.value];
     priceOfHousing.placeholder = type.minPrice;
     priceOfHousing.min = type.minPrice;
   };
@@ -128,23 +128,28 @@
     document.addEventListener(`keydown`, onErrorSaveEscPress);
   };
 
-  let deactivateAfterSubmit = function () {
+  let deactivate = function () {
     window.main.map.classList.add(`map--faded`);
     window.main.form.reset();
-    window.main.deactivate();
+    mapFilter.reset();
+    window.main.deactivateFormFilter();
     window.map.hidePins();
     window.map.mainMapPin.style.left = INITIAL_PIN_POSITION.x + `px`;
     window.map.mainMapPin.style.top = INITIAL_PIN_POSITION.y + `px`;
     window.map.removeMapCard();
+    window.map.address.value = `${parseInt(window.map.mainMapPin.style.left, 10)}, ${parseInt(window.map.mainMapPin.style.top, 10) + window.map.PIN_TIP}`;
   };
 
   window.main.form.addEventListener(`submit`, (evt) => {
     evt.preventDefault();
-
     window.load.upload(new FormData(window.main.form), () => {
-      deactivateAfterSubmit();
       getSuccess();
     }, getError);
+    deactivate();
+  });
+
+  formReset.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    deactivate();
   });
 })();
-
