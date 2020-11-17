@@ -1,6 +1,11 @@
 'use strict';
 
 (function () {
+  const MIN_MAP_X = -30;
+  const MAX_MAP_X = 1170;
+  const MIN_MAP_Y = 130;
+  const MAX_MAP_Y = 630;
+
   // перемещает pin
 
   window.map.mainMapPin.addEventListener(`mousedown`, function (evt) {
@@ -31,11 +36,11 @@
       const newOffsetTop = window.map.mainMapPin.offsetTop - shift.y;
       const newOffsetLeft = window.map.mainMapPin.offsetLeft - shift.x;
 
-      if (newOffsetTop > window.map.minMapY && newOffsetTop < window.map.maxMapY) {
+      if (newOffsetTop > MIN_MAP_Y && newOffsetTop < MAX_MAP_Y) {
         window.map.mainMapPin.style.top = newOffsetTop + `px`;
       }
 
-      if (newOffsetLeft > window.map.minMapX && newOffsetLeft < window.map.maxMapX) {
+      if (newOffsetLeft > MIN_MAP_X && newOffsetLeft < MAX_MAP_X) {
         window.map.mainMapPin.style.left = newOffsetLeft + `px`;
       }
 

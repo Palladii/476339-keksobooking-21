@@ -7,13 +7,32 @@
   const roomNumber = document.querySelector(`#room_number`);
   const capacity = document.querySelector(`#capacity`);
   const main = document.querySelector(`main`);
-  const mapFilters = window.main.filters.querySelector(`.map__filters`);
-  const adFormReset = window.main.form.querySelector(`.ad-form__reset`);
+  const mapFilter = window.main.filter.querySelector(`.map__filters`);
+  const formReset = window.main.form.querySelector(`.ad-form__reset`);
   const INITIAL_PIN_POSITION = {
     x: 570,
     y: 375
   };
-
+  let TypesRus = {
+    flat: {
+      translate: `Квартира`,
+      minPrice: 1000
+    },
+    bungalow: {
+      translate: `Бунгало`,
+      minPrice: 0
+    },
+    house: {
+      translate: `Дом`,
+      minPrice: 5000
+    },
+    palace: {
+      translate: `Дворец`,
+      minPrice: 10000
+    }
+  };
+  let typeOfHousing = window.main.form.querySelector(`select[name="type"]`);
+  let priceOfHousing = window.main.form.querySelector(`input[name="price"]`);
   const validateRoom = function () {
 
     const valueRoomNumber = Number(roomNumber.value);
@@ -42,28 +61,8 @@
     validateRoom();
   });
 
-  let typesRus = {
-    flat: {
-      translate: `Квартира`,
-      minPrice: 1000
-    },
-    bungalow: {
-      translate: `Бунгало`,
-      minPrice: 0
-    },
-    house: {
-      translate: `Дом`,
-      minPrice: 5000
-    },
-    palace: {
-      translate: `Дворец`,
-      minPrice: 10000
-    }
-  };
-  let typeOfHousing = window.main.form.querySelector(`select[name="type"]`);
-  let priceOfHousing = window.main.form.querySelector(`input[name="price"]`);
   let validateMinPriceOfHousing = () => {
-    let type = typesRus[typeOfHousing.value];
+    let type = TypesRus[typeOfHousing.value];
     priceOfHousing.placeholder = type.minPrice;
     priceOfHousing.min = type.minPrice;
   };
@@ -132,7 +131,7 @@
   let deactivate = function () {
     window.main.map.classList.add(`map--faded`);
     window.main.form.reset();
-    mapFilters.reset();
+    mapFilter.reset();
     window.main.deactivateFormFilter();
     window.map.hidePins();
     window.map.mainMapPin.style.left = INITIAL_PIN_POSITION.x + `px`;
@@ -149,7 +148,7 @@
     deactivate();
   });
 
-  adFormReset.addEventListener(`click`, (evt) => {
+  formReset.addEventListener(`click`, (evt) => {
     evt.preventDefault();
     deactivate();
   });

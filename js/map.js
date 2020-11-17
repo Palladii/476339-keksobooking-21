@@ -1,19 +1,16 @@
 'use strict';
 
 (function () {
-  const mapPins = document.querySelector(`.map__pins`);
-  const mainMapPin = mapPins.querySelector(`.map__pin--main`);
+  const mapPin = document.querySelector(`.map__pins`);
+  const mainMapPin = mapPin.querySelector(`.map__pin--main`);
   const PIN_WIDTH = 40;
   const PIN_HEIGHT = 44;
   const PIN_TIP = 22;
   const address = window.main.form.querySelector(`#address`);
   const buttonTemplate = document.querySelector(`#pin`).content.querySelector(`button`);
+  const mapCardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
   const MAX_SIMILAR_PINS_COUNT = 5;
-  const minMapX = 40;
-  const maxMapX = 1120;
-  const minMapY = 130;
-  const maxMapY = 630;
-  const avaliableHouseTypes = {bungalow: `bungalow`, flat: `flat`, house: `house`, palace: `palace`};
+  const AvaliableHouseTypes = {bungalow: `bungalow`, flat: `flat`, house: `house`, palace: `palace`};
   const housingType = window.main.map.querySelector(`#housing-type`);
   const housingPrice = window.main.map.querySelector(`#housing-price`);
   const housingRooms = window.main.map.querySelector(`#housing-rooms`);
@@ -51,7 +48,7 @@
 
   // Получаем метку на карте
   const renderButton = function (cardData) {
-    let buttonPin = buttonTemplate.cloneNode(true);
+    const buttonPin = buttonTemplate.cloneNode(true);
     buttonPin.style.left = `${cardData.location.x}px`;
     buttonPin.style.top = `${cardData.location.y}px`;
     buttonPin.querySelector(`img`).src = cardData.author.avatar;
@@ -76,17 +73,15 @@
     }
   });
 
-  const mapCardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
-
-  const houseType = {
-    [avaliableHouseTypes.bungalow]: `Бунгало`,
-    [avaliableHouseTypes.flat]: `Квартира`,
-    [avaliableHouseTypes.house]: `Дом`,
-    [avaliableHouseTypes.palace]: `Дворец`
+  const HouseType = {
+    [AvaliableHouseTypes.bungalow]: `Бунгало`,
+    [AvaliableHouseTypes.flat]: `Квартира`,
+    [AvaliableHouseTypes.house]: `Дом`,
+    [AvaliableHouseTypes.palace]: `Дворец`
   };
 
   const getCardType = function (cardDataType) {
-    return houseType[cardDataType];
+    return HouseType[cardDataType];
   };
 
   const updateCardData = function (cardAdvert, selector, value) {
@@ -108,9 +103,9 @@
   };
   const createCardAdvert = function (cardData) {
 
-    let cardAdvert = mapCardTemplate.cloneNode(true);
+    const cardAdvert = mapCardTemplate.cloneNode(true);
 
-    mapPins.appendChild(cardAdvert);
+    mapPin.appendChild(cardAdvert);
 
     updateCardImg(cardAdvert, `.popup__avatar`, cardData.author.avatar);
     updateCardData(cardAdvert, `.popup__title`, cardData.offer.title);
@@ -156,7 +151,7 @@
   };
 
   const hidePins = function () {
-    let buttonsPin = window.map.mapPins.querySelectorAll(`button`);
+    let buttonsPin = mapPin.querySelectorAll(`button`);
     buttonsPin.forEach((item) => {
       if (item.className === `map__pin`) {
         item.remove();
@@ -177,7 +172,7 @@
       fragment.appendChild(newPin);
     }
 
-    mapPins.appendChild(fragment);
+    mapPin.appendChild(fragment);
 
     pins.forEach((pin, pinIndex) => {
       pin.addEventListener(`click`, function () {
@@ -198,7 +193,9 @@
     address.value = `${PIN_LOCATION_X}, ${PIN_LOCATION_Y + PIN_TIP}`;
     window.main.form.classList.remove(`ad-form--disabled`);
     window.main.getFieldsetActive();
-    pins.forEach((pin) => pin.classList.remove(`hidden`));
+    pins.forEach((pin) => {
+      pin.classList.remove(`hidden`);
+    });
   };
 
   const filterFunction = function () {
@@ -247,19 +244,13 @@
     window.debounce.setDebounce(renderPins(newPinsData));
   };
 
-  // window.main.filters.addEventListener(`change`, window.setDebounce(filterFunction));
-  window.main.filters.addEventListener(`change`, filterFunction);
+  // window.main.filter.addEventListener(`change`, window.setDebounce(filterFunction));
+  window.main.filter.addEventListener(`change`, filterFunction);
 
   window.map = {
     mainMapPin,
-    mapPins,
-    successHandler,
     address,
     PIN_TIP,
-    minMapX,
-    maxMapX,
-    minMapY,
-    maxMapY,
     hidePins,
     removeMapCard
   };
