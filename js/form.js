@@ -9,18 +9,18 @@
   const main = document.querySelector(`main`);
   const mapFilter = window.main.filter.querySelector(`.map__filters`);
   const formReset = window.main.form.querySelector(`.ad-form__reset`);
-  const INITIAL_PIN_POSITION = {
-    x: 570,
-    y: 375
+  const InitialPosition = {
+    x: 601,
+    y: 406
   };
   let TypesRus = {
-    flat: {
-      translate: `Квартира`,
-      minPrice: 1000
-    },
     bungalow: {
       translate: `Бунгало`,
       minPrice: 0
+    },
+    flat: {
+      translate: `Квартира`,
+      minPrice: 1000
     },
     house: {
       translate: `Дом`,
@@ -33,7 +33,7 @@
   };
   let typeOfHousing = window.main.form.querySelector(`select[name="type"]`);
   let priceOfHousing = window.main.form.querySelector(`input[name="price"]`);
-  const validateRoom = function () {
+  const validateRoom = () => {
 
     const valueRoomNumber = Number(roomNumber.value);
     const valueCapacity = Number(capacity.value);
@@ -54,10 +54,10 @@
   };
   validateRoom();
 
-  roomNumber.addEventListener(`change`, function () {
+  roomNumber.addEventListener(`change`, () => {
     validateRoom();
   });
-  capacity.addEventListener(`change`, function () {
+  capacity.addEventListener(`change`, () => {
     validateRoom();
   });
 
@@ -65,17 +65,18 @@
     let type = TypesRus[typeOfHousing.value];
     priceOfHousing.placeholder = type.minPrice;
     priceOfHousing.min = type.minPrice;
+    priceOfHousing.value = type.minPrice;
   };
   typeOfHousing.addEventListener(`change`, validateMinPriceOfHousing);
 
-  checkIn.addEventListener(`change`, function (evt) {
+  checkIn.addEventListener(`change`, (evt) => {
     checkOut.value = evt.target.value;
   });
-  checkOut.addEventListener(`change`, function (evt) {
+  checkOut.addEventListener(`change`, (evt) => {
     checkIn.value = evt.target.value;
   });
 
-  const getSuccess = function () {
+  const getSuccess = () => {
     const newSuccessPopup = document.querySelector(`#success`).content.cloneNode(true);
     main.appendChild(newSuccessPopup);
 
@@ -128,16 +129,18 @@
     document.addEventListener(`keydown`, onErrorSaveEscPress);
   };
 
-  let deactivate = function () {
+  let deactivate = () => {
     window.main.map.classList.add(`map--faded`);
-    window.main.form.reset();
+
     mapFilter.reset();
     window.main.deactivateFormFilter();
+
     window.map.hidePins();
-    window.map.mainMapPin.style.left = INITIAL_PIN_POSITION.x + `px`;
-    window.map.mainMapPin.style.top = INITIAL_PIN_POSITION.y + `px`;
-    window.map.removeMapCard();
-    window.map.address.value = `${parseInt(window.map.mainMapPin.style.left, 10)}, ${parseInt(window.map.mainMapPin.style.top, 10) + window.map.PIN_TIP}`;
+    window.map.mainPin.style.left = InitialPosition.x + `px`;
+    window.map.mainPin.style.top = InitialPosition.y + `px`;
+    window.map.removeCard();
+    window.main.form.reset();
+    validateMinPriceOfHousing();
   };
 
   window.main.form.addEventListener(`submit`, (evt) => {
@@ -146,10 +149,12 @@
       getSuccess();
     }, getError);
     deactivate();
+    window.map.getAddress();
   });
 
   formReset.addEventListener(`click`, (evt) => {
     evt.preventDefault();
     deactivate();
+    window.map.getAddress();
   });
 })();

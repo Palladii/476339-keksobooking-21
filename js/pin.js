@@ -3,12 +3,11 @@
 (function () {
   const MIN_MAP_X = -30;
   const MAX_MAP_X = 1170;
-  const MIN_MAP_Y = 130;
-  const MAX_MAP_Y = 630;
+  const MIN_MAP_Y = 45;
+  const MAX_MAP_Y = 547;
 
   // перемещает pin
-
-  window.map.mainMapPin.addEventListener(`mousedown`, function (evt) {
+  window.map.mainPin.addEventListener(`mousedown`, (evt) => {
     evt.preventDefault(); // обработаем событие начала перетаскивания нашего диалога mousedown
 
     let startCoords = {
@@ -18,7 +17,7 @@
 
     let dragged = false;
 
-    const onMouseMove = function (moveEvt) {
+    const onMouseMove = (moveEvt) => {
       moveEvt.preventDefault();
 
       dragged = true;
@@ -32,21 +31,20 @@
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
-
-      const newOffsetTop = window.map.mainMapPin.offsetTop - shift.y;
-      const newOffsetLeft = window.map.mainMapPin.offsetLeft - shift.x;
+      const newOffsetTop = window.map.mainPin.offsetTop - shift.y;
+      const newOffsetLeft = window.map.mainPin.offsetLeft - shift.x;
 
       if (newOffsetTop > MIN_MAP_Y && newOffsetTop < MAX_MAP_Y) {
-        window.map.mainMapPin.style.top = newOffsetTop + `px`;
+        window.map.mainPin.style.top = newOffsetTop + `px`;
       }
 
       if (newOffsetLeft > MIN_MAP_X && newOffsetLeft < MAX_MAP_X) {
-        window.map.mainMapPin.style.left = newOffsetLeft + `px`;
+        window.map.mainPin.style.left = newOffsetLeft + `px`;
       }
-
+      window.map.address.value = `${parseInt(window.map.mainPin.style.left, 10) + window.map.PIN_WIDTH / 2}, ${parseInt(window.map.mainPin.style.top, 10) + window.map.PIN_HEIGHT + window.map.PIN_TIP}`;
     }; // При каждом движении мыши обновляет смещение относительно первоначальной точки, чтобы диалог смещался на необходимую величину
 
-    const onMouseUp = function (upEvt) {
+    const onMouseUp = (upEvt) => {
       upEvt.preventDefault();
 
       document.removeEventListener(`mousemove`, onMouseMove);
@@ -54,13 +52,12 @@
 
       if (dragged) {
         //  отменяет действие по умолчанию, если перемещение имело место.
-        const onClickPreventDefault = function (clickEvt) {
+        const onClickPreventDefault = (clickEvt) => {
           clickEvt.preventDefault();
-          window.map.mainMapPin.removeEventListener(`click`, onClickPreventDefault);
+          window.map.mainPin.removeEventListener(`click`, onClickPreventDefault);
         };
-        window.map.mainMapPin.addEventListener(`click`, onClickPreventDefault);
+        window.map.mainPin.addEventListener(`click`, onClickPreventDefault);
       }
-      window.map.address.value = `${parseInt(window.map.mainMapPin.style.left, 10)}, ${parseInt(window.map.mainMapPin.style.top, 10) + window.map.PIN_TIP}`;
     };
 
     document.addEventListener(`mousemove`, onMouseMove);
